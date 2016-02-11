@@ -4,10 +4,10 @@ import rospy
 import smach
 import smach_ros
 from std_msgs.msg import String
-from gui_pkg.msg import Order
+from turtle_eats_gui.msg import Order
 
-person_goal = {'A':[],'B':[],'C':[]}
-menu_goal = {'ChineseFood':[], 'ItalianFood':[],'JapaneseFood':[]}
+#person_goal = {'A':[],'B':[],'C':[]}
+#menu_goal = {'ChineseFood':[], 'ItalianFood':[],'JapaneseFood':[]}
 
 class GetOrder(smach.State):
 

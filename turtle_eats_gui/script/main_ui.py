@@ -10,7 +10,8 @@ from turtle_eats import Ui_MainWindow
 ## ROS
 import rospy
 from std_msgs.msg import String
-from gui_pkg.msg import Order
+#from gui_pkg.msg import Order
+from turtle_eats_gui.msg import Order
 
 
 class Test(QMainWindow):
@@ -23,7 +24,7 @@ class Test(QMainWindow):
         self.order = Order()
         self.order.person_name = None
         self.order.menu_name = None
-        self.order.person_name = "A"
+        self.order.person_name = "hirayae"
         self.order.menu_name = "ChineseFood"
         Test.status_show(self)
         #self.pub_person = rospy.Publisher('topic_person',String, queue_size=1)

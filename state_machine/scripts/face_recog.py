@@ -24,21 +24,22 @@ import os
 import pickle
 
 print('load trained model')
-with open('/home/roboworks/roslec_ws/src/tam_ros_lecture-group4/face_recog/model.pickle', mode='rb') as f:
+with open('/home/ros/roslec_ws/src/tam_ros_lecture-group4/state_machine/scripts/model.pickle', mode='rb') as f:
     clf = pickle.load(f)
 
 class FaceRecog(smach.State):
 
     def __init__(self):
-        smach.State.__init__(self, outcomes=['success'], input_keys=['person_name', 'menu_name'])
+        smach.State.__init__(self, outcomes=['success','failure'], input_keys=['person_name', 'menu_name'])
 
         self.bridge = CvBridge()
 
 
     def execute(self, userdata):
 
+        name = None
 
-        img_msg  = rospy.wait_for_message('/camera/rgb/image_raw', Image, timeout=None )
+        img_msg  = rospy.wait_for_message('/image_raw', Image, timeout=None )
         cv_image = self.bridge.imgmsg_to_cv2(img_msg, "bgr8")
         rgb_image = cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
 
@@ -50,10 +51,12 @@ class FaceRecog(smach.State):
         if no > 0 :
             print("Found:")
 
+        name = None
         for i in range(no):
             test_image_enc = face_recognition.face_encodings(rgb_image, known_face_locations=face_locations)[i]
             name = clf.predict([test_image_enc])
             print(*name)
+
         
         if userdata.person_name == name:
             return "success"
@@ -65,10 +68,13 @@ if __name__=='__main__':
     rospy.init_node('face_recog', anonymous=True)
 
     sm = smach.StateMachine(outcomes=['success'])
+    sm.userdata.person_name = None
+    sm.userdata.menu_name = None
     
     with sm:
         smach.StateMachine.add('DEBUG', FaceRecog(),
-                               transitions = {'success': 'DEBUG'})
+                               transitions = {'success': 'DEBUG'
+                                             ,'failure': 'DEBUG'})
     sm.execute()
     rospy.spin()
 

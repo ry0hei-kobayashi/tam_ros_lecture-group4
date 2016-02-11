@@ -14,31 +14,25 @@ import tf.transformations
 import smach
 import smach_ros
 
-# x, y, yawに移動だけ
-# x, y, yawの配列を受け取ってそこから取り出す形で入力受け取り
-# outcomes, success fail timeout
-# 引数を
-class Move(smach.state, nav_point_array=None):
-    def __init__(self):
-        rospy.init_node('navigation_sample')
+class Move(smach.State):
+    def __init__(self, nav_point_array=None):
+        rospy.loginfo('start move') 
         #move_base client declaration
         self.cli = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
-        # outcomesを減らす
+        self.goal_point = nav_point_array[0], nav_point_array[1], nav_point_array[2]
+        
         smach.State.__init__(self,
-                             outcomes=['success', 'timeout', 'failere'],
-                             input_keys=['nav2person'],
-                             output_keys=['nav2person'])
-    # nav2person == [x, y, yaw]
-    # nav2store == [x, y, yaw]
-    # nav2slope == [x, y, yaw]
+                             outcomes=['success', 'failure'],
+                             input_keys=['nav2person','nav2store','nav2slope'],
+                             output_keys=['nav2person','nav2store','nav2slope'])
 
 
     def execute(self, userdata):
-        if not self.cli.wait_for_server(20.0) :
-            rospy.logwarn("Server timed out!")
-            return 'timeout'
+        #if not self.cli.wait_for_server(30.0) :
+        #    rospy.logwarn("Server timed out!")
+        #    return 'timeout'
 
-        timeout_time = rospy.Time.now() + rospy.Duration(30.0)
+        #timeout_time = rospy.Time.now() + rospy.Duration(30.0)
 
         rospy.loginfo('Executing state MOVE')
         rospy.sleep(3)
@@ -48,22 +42,24 @@ class Move(smach.state, nav_point_array=None):
         #Declaration of the reference frame
         pose.header.frame_id = "map"
         #Declaration of coordinates of target point
-        pose.pose.position = Point(nav_point_array[0], nav_point_array[1], 0)
+        pose.pose.position = Point(self.goal_point[0], self.goal_point[1], 0)
         #Declaration of orientation when arriving to the target point
-        quat = tf.transformations.quaternion_from_euler(0, 0, nav_point_array[2])
+        quat = tf.transformations.quaternion_from_euler(0, 0, self.goal_point[2])
         pose.pose.orientation = Quaternion(*quat)
         #Declaration of class for move base target value
         goal = MoveBaseGoal()
         goal.target_pose = pose
+        rospy.loginfo(goal)
 
+        
         self.cli.send_goal(goal)
         # self.cli.wait_for_result()
 
-        while not self.cli.wait_for_result(rospy.Duration(1.0)):
+        #while not self.cli.wait_for_result(rospy.Duration(1.0)):
             # Force return if timeout occurs
-            if rospy.Time.now() > timeout_time:
-                rospy.logwarn("Excuse method timed out!")
-                return 'timeout'
+            #if rospy.Time.now() > timeout_time:
+            #    rospy.logwarn("Excuse method timed out!")
+            #    return 'timeout'
 
         action_state = self.cli.get_state()
         
@@ -72,12 +68,18 @@ class Move(smach.state, nav_point_array=None):
             return 'success'
 
         else:
-            return 'failere'
+            return 'failure'
 
 
-# remapping={'goal_x' :'pose_x',
-#            'goal_y' : 'pose_y',
-#            'goal_yaw': 'pose_yaw',
-#            'goal_place_in' : 'nexr_place',
-#            'goal_place_out' : 'next_place'}
-
+if __name__ == '__main__':
+    rospy.init_node('move_to_goal', anonymous=True)
+    sm = smach.StateMachine(outcomes=['success','failure', 'timeout'])
+    sm.userdata.person_name = 'hirayae'
+    sm.userdata.menu_name = 'ChineseFood'
+    sm.userdata.nav2person = [1,0.5,0]
+    with sm:
+        smach.StateMachine.add('DEBUG', Move(nav_point_array = sm.userdata.nav2person),
+                transitions = {'success': 'success',
+                                'failure': 'failure'})
+    sm.execute()
+    rospy.spin()
