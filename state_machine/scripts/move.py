@@ -15,14 +15,14 @@ import smach
 import smach_ros
 
 class Move(smach.State):
-    def __init__(self, nav_point_array=None):
+    def __init__(self, nav_point_array=[0,0,0]):
         rospy.loginfo('start move') 
         #move_base client declaration
         self.cli = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
         self.goal_point = nav_point_array[0], nav_point_array[1], nav_point_array[2]
         
         smach.State.__init__(self,
-                             outcomes=['success', 'failure'],
+                             outcomes=['success'],
                              input_keys=['nav2person','nav2store','nav2slope'],
                              output_keys=['nav2person','nav2store','nav2slope'])
 
@@ -51,11 +51,13 @@ class Move(smach.State):
         goal.target_pose = pose
         rospy.loginfo(goal)
 
+        #while not rospy.is_shutdown():
         
+        #while not self.cli.wait_for_result(rospy.Duration(1.0)):
         self.cli.send_goal(goal)
+        self.cli.wait_for_result()
         # self.cli.wait_for_result()
 
-        #while not self.cli.wait_for_result(rospy.Duration(1.0)):
             # Force return if timeout occurs
             #if rospy.Time.now() > timeout_time:
             #    rospy.logwarn("Excuse method timed out!")
@@ -65,10 +67,10 @@ class Move(smach.State):
         
         if action_state == GoalStatus.SUCCEEDED:
             rospy.loginfo("Navigation Succeeded.")
-            return 'success'
 
-        else:
-            return 'failure'
+
+        return 'success'
+
 
 
 if __name__ == '__main__':

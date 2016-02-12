@@ -11,47 +11,65 @@ from face_recog import FaceRecog
 from turtle_eats_gui.get_order import GetOrder
 
 def create_sm():
-    sm = smach.StateMachine(outcomes=['success','timeout','failure'])
+    sm = smach.StateMachine(outcomes=['success','failure'])
 
     sm.userdata.person_name = None
     sm.userdata.menu_name = None
-    sm.userdata.nav2store = None
-    sm.userdata.nav2slope = None
-    sm.userdata.nav2person = None
+    sm.userdata.nav2store =  [0.75,0.78,0.16]
+    sm.userdata.nav2slope =  [1.4,0.75,0.19]
+    sm.userdata.nav2person = [3.7,-0.46,0.15]
 
     with sm:
 
         smach.StateMachine.add('ORDER', GetOrder(),
-                               transitions={'success':'ORDER'})
+                               transitions={'success':'PLAN'})
         
         smach.StateMachine.add('PLAN', Plan(),
                                transitions={'success':'Move2Store'})
                                                             
-        smach.StateMachine.add('MOVE2Store', Move(nav_point_array = sm.userdata.nav2store),
-                                transitions={'success': 'Move2Slope',
-                                              'timeout': 'MOVE2Store',
-                                              'failure': 'MOVE2Store'})
+        smach.StateMachine.add('Move2Store', Move(nav_point_array = sm.userdata.nav2store),
+                                transitions={'success': 'Move2Slope'})
+                                              #'failure': 'Move2Store'})
         
         smach.StateMachine.add('Move2Slope', Move(nav_point_array = sm.userdata.nav2slope),
-                                transitions={'success': 'SLOPE',
-                                             'timeout': 'Move2Slope',
-                                             'failure': 'Move2Slope'})
+                                transitions={'success': 'SLOPE'})
+                                             #'failure': 'Move2Slope'})
         
         
         smach.StateMachine.add('SLOPE', VelControl(),
-                               transitions={'success': 'MOVE2Person',
-                                             'timeout': 'SLOPE',
-                                             'failure': 'SLOPE'})
+                               transitions={'success': 'Move2Person'})
         
-        smach.StateMachine.add('MOVE2Person', Move(nav_point_array = sm.userdata.nav2person),
-                               transitions={'success': 'FACE',
-                                             'timeout': 'MOVE2Person',
-                                             'failure': 'MOVE2Person'})
+        smach.StateMachine.add('Move2Person', Move(nav_point_array = sm.userdata.nav2person),
+                               transitions={'success': 'FACE'})
+                                             #'failure': 'Move2Person'})
         
         smach.StateMachine.add('FACE', FaceRecog(),
-                               transitions={'success': 'success',
-                                             'timeout': 'FACE',
+                               transitions={'success': 'PLAN_2',
                                              'failure': 'FACE'})
+
+        smach.StateMachine.add('PLAN_2', Plan(),
+                               transitions={'success':'Move2Store_2'})
+                                                            
+        smach.StateMachine.add('Move2Store_2', Move(nav_point_array = sm.userdata.nav2store),
+                                transitions={'success': 'Move2Slope_2'})
+                                              #'failure': 'Move2Store'})
+        
+        smach.StateMachine.add('Move2Slope_2', Move(nav_point_array = sm.userdata.nav2slope),
+                                transitions={'success': 'SLOPE_2'})
+                                             #'failure': 'Move2Slope'})
+        
+        
+        smach.StateMachine.add('SLOPE_2', VelControl(),
+                               transitions={'success': 'Move2Person_2'})
+        
+        smach.StateMachine.add('Move2Person_2', Move(nav_point_array = sm.userdata.nav2person),
+                               transitions={'success': 'FACE_2'})
+                                             #'failure': 'Move2Person'})
+        
+        smach.StateMachine.add('FACE_2', FaceRecog(),
+                               transitions={'success': 'success',
+                                             'failure': 'FACE_2'})
+
 
         
     return sm
