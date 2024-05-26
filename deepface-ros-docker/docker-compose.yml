@@ -1,0 +1,34 @@
+version: '3'
+services:
+  deepface-ros-docker:
+    image: deepface-ros:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    security_opt:
+     - apparmor:unconfined
+    volumes:
+     - /tmp/.X11-unix:/tmp/.X11-unix
+     - ./face_recognizer:/catkin_ws/src/face_recognizer
+    environment:
+      DISPLAY: $DISPLAY
+      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+      ROS_MASTER_URI: http://192.168.0.249:11311
+      ROS_IP: 192.168.0.249
+      #PYTHONPATH: ./
+    working_dir: /catkin_ws
+    network_mode: host
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+           - driver: nvidia
+             count: 1
+             capabilities: [gpu]
+
+    command: nvidia-smi -l
+    #command: rosrun face_recognizer face_recog_server.py
+
+
+    
