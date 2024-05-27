@@ -1,6 +1,7 @@
-#---------------------------------------------
-# cuda=11.2, cudnn=8.1.0, tensorflow=2.5.1
-#---------------------------------------------
+#-------------------------------------------------------
+# cuda=11.3, cudnn=8, tensorflow=2.8.0 protobuf=3.20.3
+# test env1: i9 10900x, rtx3090ti
+#-------------------------------------------------------
 #FROM tensorflow/tensorflow:2.5.1-gpu
 #FROM nvidia/cuda:11.2.0-cudnn8-devel-ubuntu20.04
 FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
@@ -43,8 +44,8 @@ RUN pip3 install rospkg
 #-------------------------------
 # install tensorflow with gpu
 #-------------------------------
-RUN python3 -m pip install tensorflow[and-cuda]
-RUN python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+RUN python3 -m pip install tensorflow==2.8.0
+RUN pip3 install protobuf==3.20.3
 
 #-------------------------------
 # install deep face, retinaface
@@ -92,6 +93,7 @@ RUN /bin/bash -c '. /opt/ros/noetic/setup.bash; cd /catkin_ws; catkin_make'
 
 #solution for import error libGL.so.1
 RUN apt -y install libopencv-dev 
+
 
 COPY ./ros_entrypoint.sh /
 ENTRYPOINT ["/ros_entrypoint.sh"]

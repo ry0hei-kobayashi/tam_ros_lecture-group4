@@ -1,0 +1,11 @@
+1.cache file problem 
+From: https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5
+To: /root/.deepface/weights/vgg_face_weights.h5
+
+2.image path problem
+Error processing hirayae.png: Exception while processing img1_path
+Error processing shiratsuchi.png: Exception while processing img1_path
+Error processing image1.png: Exception while processing img1_path
+Error processing hirayae.png: Exception while processing img1_path
+Error processing shiratsuchi.png: Exception while processing img1_path
+
