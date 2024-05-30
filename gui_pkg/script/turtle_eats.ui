@@ -45,9 +45,9 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>390</y>
-      <width>201</width>
-      <height>31</height>
+      <y>370</y>
+      <width>231</width>
+      <height>91</height>
      </rect>
     </property>
     <property name="font">
@@ -190,7 +190,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../pyqt_ws/source/title.drawio.png</pixmap>
+     <pixmap>title.drawio.png</pixmap>
     </property>
    </widget>
   </widget>
@@ -200,7 +200,7 @@
      <x>0</x>
      <y>0</y>
      <width>393</width>
-     <height>28</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
