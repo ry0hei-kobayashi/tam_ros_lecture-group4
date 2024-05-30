@@ -23,7 +23,7 @@ def sign_detection(image):
      rospy.init_node('sign_detection', anonymous=True)
      pub = rospy.Publisher("/chatter/Int64", Int64, queue_size=1)
     # imageをnumpy配列に変更?
-    image = image.resize((160, 90, 3))
+    image = image.resize((160, 90, 4))
     color = [0, 0, 0]
     for i in range(image.shape[0]):
         for j in range(image.shape[1]):
