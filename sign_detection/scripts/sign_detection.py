@@ -4,9 +4,6 @@ from cv_bridge import CvBridge
 import cv2
 
 def edge_detection(image):
-  bridge = CvBridge()
-  image = bridge.imgmsg_to_cv2(image, "bgr8")
-  image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
   result1=0
   result2=0
   for i in range(0, image.shape[0]-2, 3):
@@ -21,7 +18,7 @@ def edge_detection(image):
 
 def sign_detection():
     rospy.init_node('sign_detection', anonymous=True)
-    rospy.Subscriber('/camera/color/image_rect_color', image)
+    rospy.Subscriber('/image_raw', image)
     pub = rospy.Publisher("/chatter/Int64", Int64, queue_size=1)
     bridge = CvBridge()
     image = bridge.imgmsg_to_cv2(image, "bgr8")
