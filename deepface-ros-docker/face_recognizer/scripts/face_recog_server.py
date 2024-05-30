@@ -89,7 +89,6 @@ class FaceRecogServer():
                                 known_face_detect = True
                                 match_ = file
                                 rospy.loginfo(f"match found with {file}")
-                                break
 
                             else:
                                 rospy.loginfo(f"No match found")

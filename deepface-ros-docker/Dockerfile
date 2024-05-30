@@ -94,6 +94,8 @@ RUN /bin/bash -c '. /opt/ros/noetic/setup.bash; cd /catkin_ws; catkin_make'
 #solution for import error libGL.so.1
 RUN apt -y install libopencv-dev 
 
+RUN pip install face_recognition
+
 
 COPY ./ros_entrypoint.sh /
 ENTRYPOINT ["/ros_entrypoint.sh"]

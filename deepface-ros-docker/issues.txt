@@ -9,3 +9,14 @@ Error processing image1.png: Exception while processing img1_path
 Error processing hirayae.png: Exception while processing img1_path
 Error processing shiratsuchi.png: Exception while processing img1_path
 
+24-05-30 16:04:28 - retinaface.h5 will be downloaded from the url https://github.com/serengil/deepface_models/releases/download/v1.0/retinaface.h5
+Downloading...
+From: https://github.com/serengil/deepface_models/releases/download/v1.0/retinaface.h5
+To: /root/.deepface/weights/retinaface.h5
+100%|█████████████████████████████████████████████████████████████| 119M/119M [00:15<00:00, 7.48MB/s]
+24-05-30 16:04:58 - Found 0 newly added image(s), 0 removed image(s), 17 replaced image(s).
+Finding representations:   0%|                                                | 0/17 [00:00<?, ?it/s]24-05-30 16:05:11 - VGGFace2_DeepFace_weights_val-0.9034.h5 will be downloaded...
+Downloading...
+From: https://github.com/swghosh/DeepFace/releases/download/weights-vggface2-2d-aligned/VGGFace2_DeepFace_weights_val-0.9034.h5.zip
+To: /root/.deepface/weights/VGGFace2_DeepFace_weights_val-0.9034.h5.zip
+
