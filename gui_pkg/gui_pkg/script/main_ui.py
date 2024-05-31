@@ -20,19 +20,17 @@ class Test(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.orderflg = 0
-        #self.person = String()
         self.order = Order()
-        #self.person.data = "A"
+        self.order.person_name = None
+        self.order.menu_name = None
         self.order.person_name = "A"
-        #self.menu = String()
-        self.order.menu_name = "中華"
+        self.order.menu_name = "ChineseFood"
         Test.status_show(self)
         #self.pub_person = rospy.Publisher('topic_person',String, queue_size=1)
         #self.pub_menu = rospy.Publisher('topic_menu',String, queue_size=1)
-        self.pub_order = rospy.Publisher('topic_order',Order, queue_size=1)
+        self.pub_order = rospy.Publisher('send_order',Order, queue_size=1)
     
     def clicked_order(self):
-	    #print(f"{self.menu},{self.person}")
         self.orderflg = 1
         Test.status_show(self)
         #self.pub_person.publish(self.person)
