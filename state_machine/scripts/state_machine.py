@@ -24,12 +24,21 @@ def create_sm():
         def move_select(userdata):
             print(sm.userdata_menu_name)
             print(sm.userdata_person_name)
+            #if store1 or 2
 
             return 'success'
         smach.StateMachine.add('MOVESELECT', smach.CBState(move_select),
                                transitions={'success':'ORDER'})
 
-        #smach.StateMachine.add('MOVE', Move(),
+        #smach.StateMachine.add('MOVE', Move(1,1,0.15),
+        #                       taransitions={'outcomeA':'STORE',
+        #                                     'outcomeB':'SLOPE',
+        #                                     'outcomeC':'FACE',
+        #                                     'timeout': 'MOVE',
+        #                                     'failure': 'MOVE'})
+        #
+
+        #smach.StateMachine.add('MOVE', Move(2,3,0.15),
         #                       taransitions={'outcomeA':'STORE',
         #                                     'outcomeB':'SLOPE',
         #                                     'outcomeC':'FACE',
