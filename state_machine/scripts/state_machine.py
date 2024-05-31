@@ -5,47 +5,56 @@ import smach
 import smach_ros
  
 #from turtle_eats_gui.get_order import GetOrder
+from turtle_eats_gui.get_order import GetOrder
 
 def create_sm():
     sm = smach.StateMachine(outcomes=['success', 'failure','outcomeA','outcomeB','outcomeC'])
 
-    sm.userdata.menu = []
+    sm.userdata.person_name = None
+    sm.userdata.menu_name = None
 
     with sm:
 
         smach.StateMachine.add('ORDER', GetOrder(),
-                               taransitions={'success':'MOVE',
+                               taransitions={'success':'MOVESELECT',
                                              'timeout':'ORDER',
                                              'failure':'ORDER'})
 
-        smach.StateMachine.add('MOVE', Move(),
-                               taransitions={'outcomeA':'STORE',
-                                             'outcomeB':'SLOPE',
-                                             'outcomeC':'FACE',
-                                             'timeout': 'MOVE',
-                                             'failure': 'MOVE'})
-        
-        smach.StateMachine.add('STORE', Store(),
-                               taransitions={'success': 'MOVE',
-                                             'timeout': 'STORE',
-                                             'failure': 'STORE'})
-        
-        smach.StateMachine.add('SLOPE', Slope(),
-                               taransitions={'success': 'MOVE',
-                                             'timeout': 'SLOPE',
-                                             'failure': 'SLOPE'})
-        
-        smach.StateMachine.add('FACE', Face(),
-                               taransitions={'success': 'EXIT',
-                                             'timeout': 'FACE',
-                                             'failure': 'FACE'})
+        @smach.cb_interface(outcomes=['success'])
+        def move_select(userdata):
+            print(sm.userdata_menu_name)
+            print(sm.userdata_person_name)
 
+            return 'success'
+        smach.StateMachine.add('MOVESELECT', smach.CBState(move_select),
+                               transitions={'success':'ORDER'})
 
-        #@smach.cb_interface(outcomes=['success'])
-        #def record_start_time(userdata):
-        #    return 'success'
-        #smach.StateMachine.add('RECORD_START_TIME', smach.CBState(record_start_time),
-        #                       transitions={'success':'LISTEN_ORDER'})
+        #smach.StateMachine.add('MOVE', Move(),
+        #                       taransitions={'outcomeA':'STORE',
+        #                                     'outcomeB':'SLOPE',
+        #                                     'outcomeC':'FACE',
+        #                                     'timeout': 'MOVE',
+        #                                     'failure': 'MOVE'})
+        #
+
+        #smach.StateMachine.add('STORE', Store(),
+        #                       taransitions={'success': 'MOVE',
+        #                                     'timeout': 'STORE',
+        #                                     'failure': 'STORE'})
+        #
+        #smach.StateMachine.add('SLOPE', Slope(),
+        #                       taransitions={'success': 'MOVE',
+        #                                     'timeout': 'SLOPE',
+        #                                     'failure': 'SLOPE'})
+        #
+        #smach.StateMachine.add('FACE', Face(),
+        #                       taransitions={'success': 'EXIT',
+        #                                     'timeout': 'FACE',
+        #                                     'failure': 'FACE'})
+
+        smach.StateMachine.add('FINISH', ,
+                               taransitions={'success': 'success'})
+
         
     return sm
 
