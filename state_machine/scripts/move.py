@@ -14,24 +14,28 @@ import tf.transformations
 import smach
 import smach_ros
 
-
-class Move(smach.state):
-
+# x, y, yawに移動だけ
+# x, y, yawの配列を受け取ってそこから取り出す形で入力受け取り
+# outcomes, success fail timeout
+# 引数を
+class Move(smach.state, nav_point_array=None):
     def __init__(self):
         rospy.init_node('navigation_sample')
         #move_base client declaration
         self.cli = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
         # outcomesを減らす
         smach.State.__init__(self,
-                             outcomes=['outcomeA', 'outcomeB', 'outcomeC', 'timeout', 'failere'],
-                             input_keys=['goal_x', 'goal_y', 'goal_yaw', 'goal_place_in'],
-                             output_keys=['goal_place_out'])
+                             outcomes=['success', 'timeout', 'failere'],
+                             input_keys=['nav2person'],
+                             output_keys=['nav2person'])
+    # nav2person == [x, y, yaw]
+    # nav2store == [x, y, yaw]
+    # nav2slope == [x, y, yaw]
 
 
-    def excuse(self, userdata):
+    def execute(self, userdata):
         if not self.cli.wait_for_server(20.0) :
             rospy.logwarn("Server timed out!")
-            userdata.goal_place_out = userdata.goal_place_in
             return 'timeout'
 
         timeout_time = rospy.Time.now() + rospy.Duration(30.0)
@@ -44,9 +48,9 @@ class Move(smach.state):
         #Declaration of the reference frame
         pose.header.frame_id = "map"
         #Declaration of coordinates of target point
-        pose.pose.position = Point(userdata.goal_x, userdata.goal_y, 0)
+        pose.pose.position = Point(nav_point_array[0], nav_point_array[1], 0)
         #Declaration of orientation when arriving to the target point
-        quat = tf.transformations.quaternion_from_euler(0, 0, userdata.goal_yaw)
+        quat = tf.transformations.quaternion_from_euler(0, 0, nav_point_array[2])
         pose.pose.orientation = Quaternion(*quat)
         #Declaration of class for move base target value
         goal = MoveBaseGoal()
@@ -65,18 +69,9 @@ class Move(smach.state):
         
         if action_state == GoalStatus.SUCCEEDED:
             rospy.loginfo("Navigation Succeeded.")
-            if userdata.goal_place_in == 'STORE':
-                return 'outcomeA'
-            elif userdata.goal_place_in == 'SLOPE':
-                return 'outcomeB'
-            elif userdata.goal_place_in == 'FACE':
-                return 'outcomeC'
-            else:
-                rospy.loginfo("Where is goal?")
-                exit
+            return 'success'
 
         else:
-            userdata.goal_place_out = userdata.goal_place_in
             return 'failere'
 
 
