@@ -30,8 +30,7 @@ with open('/home/roboworks/roslec_ws/src/tam_ros_lecture-group4/face_recog/model
 class FaceRecog(smach.State):
 
     def __init__(self):
-        smach.State.__init__(self, outcomes=['success'], input_keys=['person_name', 'menu_name'],
-                                                         output_keys=['person_name', 'menu_name'])
+        smach.State.__init__(self, outcomes=['success'], input_keys=['person_name', 'menu_name'])
 
         self.bridge = CvBridge()
 
@@ -48,14 +47,18 @@ class FaceRecog(smach.State):
         face_locations = face_recognition.face_locations(rgb_image)
         no = len(face_locations)
         print("Number of faces detected: ", no)
-        
-        print("Found:")
+        if no > 0 :
+            print("Found:")
+
         for i in range(no):
             test_image_enc = face_recognition.face_encodings(rgb_image, known_face_locations=face_locations)[i]
             name = clf.predict([test_image_enc])
             print(*name)
         
-        return "success"
+        if userdata.person_name == name:
+            return "success"
+        else:
+            return "failure"
 
 
 if __name__=='__main__':
