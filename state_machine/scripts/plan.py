@@ -11,7 +11,7 @@ class Plan(smach.state):
             userdata.nav2person = 1, 1, 1 # x, y, yaw
             userdata.nav2store = 1, 1, 1 # x, y, yaw
 
-            return success
+            return "success"
 
 if __name__ == '__main__':
     rospy.init_node('plan', anonymous=True)

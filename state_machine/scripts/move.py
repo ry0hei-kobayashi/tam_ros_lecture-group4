@@ -21,7 +21,7 @@ class Move(smach.state):
         rospy.init_node('navigation_sample')
         #move_base client declaration
         self.cli = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
-
+        # outcomesを減らす
         smach.State.__init__(self,
                              outcomes=['outcomeA', 'outcomeB', 'outcomeC', 'timeout', 'failere'],
                              input_keys=['goal_x', 'goal_y', 'goal_yaw', 'goal_place_in'],
