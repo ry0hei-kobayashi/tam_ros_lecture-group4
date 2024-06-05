@@ -1,4 +1,4 @@
-#!/usr/bin python3
+#!/usr/bin/env python3
 
 import rospy
 import smach
@@ -15,9 +15,10 @@ def create_sm():
 
     sm.userdata.person_name = None
     sm.userdata.menu_name = None
-    sm.userdata.nav2store =  [0.75,0.78,0.16]
+    sm.userdata.nav2store =  [0.2415,2.0024,1.907]
     sm.userdata.nav2slope =  [1.4,0.75,0.19]
-    sm.userdata.nav2person = [3.7,-0.46,0.15]
+    sm.userdata.nav2person = [1.775, 4.824, 1.419]
+    sm.userdata.seq = 0
 
     with sm:
 

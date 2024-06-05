@@ -19,22 +19,34 @@ class Move(smach.State):
         rospy.loginfo('start move') 
         #move_base client declaration
         self.cli = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
-        self.goal_point = nav_point_array[0], nav_point_array[1], nav_point_array[2]
+        #self.goal_point = nav_point_array[0], nav_point_array[1], nav_point_array[2]
         
         smach.State.__init__(self,
                              outcomes=['success'],
-                             input_keys=['nav2person','nav2store','nav2slope'],
-                             output_keys=['nav2person','nav2store','nav2slope'])
+                             input_keys=['nav2person','nav2store','nav2slope','seq'],
+                             output_keys=['nav2person','nav2store','nav2slope','seq'])
 
 
     def execute(self, userdata):
+        action_state = None
         #if not self.cli.wait_for_server(30.0) :
         #    rospy.logwarn("Server timed out!")
         #    return 'timeout'
 
         #timeout_time = rospy.Time.now() + rospy.Duration(30.0)
+        
 
         rospy.loginfo('Executing state MOVE')
+
+
+        if userdata.seq == 0:
+            self.goal_point = userdata.nav2store
+            userdata.seq = 1
+        elif userdata.seq == 1:
+            self.goal_point = userdata.nav2person
+            userdata.seq = 0
+
+        rospy.loginfo(f'goal point:{self.goal_point}')
         rospy.sleep(3)
 
         pose = PoseStamped()
@@ -67,9 +79,10 @@ class Move(smach.State):
         
         if action_state == GoalStatus.SUCCEEDED:
             rospy.loginfo("Navigation Succeeded.")
-
-
         return 'success'
+        
+
+
 
 
 

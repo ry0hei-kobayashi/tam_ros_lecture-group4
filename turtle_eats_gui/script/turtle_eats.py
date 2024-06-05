@@ -72,7 +72,7 @@ class Ui_MainWindow(object):
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
         self.label_3.setGeometry(QtCore.QRect(100, 10, 191, 81))
         self.label_3.setText("")
-        self.label_3.setPixmap(QtGui.QPixmap("/home/ros/Documents/gui_ws/catkin_ws/src/gui_pkg/script/title.drawio.png"))
+        self.label_3.setPixmap(QtGui.QPixmap("/home/ros/roslec_ws/src/tam_ros_lecture-group4/turtle_eats_gui/script/title.drawio.png"))
         self.label_3.setObjectName("label_3")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)

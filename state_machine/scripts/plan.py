@@ -8,15 +8,15 @@ class Plan(smach.State):
 
     def execute(self, userdata):
         if userdata.person_name == 'hirayae' :
-            userdata.nav2person = [3.73, -0.462, 0.151]# x, y, yaw
+            userdata.nav2person = [1.775, 4.824, 1.419]# x, y, yaw
         elif userdata.person_name == 'kawahara':
-            userdata.nav2person = [4.19, 1.35, 0.193]# x, y, yaw
+            userdata.nav2person = [0.2251, 5.0060, 1.561]# x, y, yaw
 
         if userdata.menu_name ==  'ChineseFood':
-            userdata.nav2store = [0.752, 0.785, 0.169]# x, y, yaw
+            userdata.nav2store = [2.11, 3.35, 0.943]# x, y, yaw
             userdata.nav2slope = [1.41,0.784,0.193]
-        elif userdata.menu_name == 'ItalianFood':
-            userdata.nav2store == [1, 1, 1]
+        else:
+            userdata.nav2store == [0.2415, 2.0024, 1.907]
             userdata.nav2slope = [1,1,1]
 
         return "success"
